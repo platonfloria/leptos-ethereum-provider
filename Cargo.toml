@@ -1,0 +1,12 @@
+[package]
+name = "leptos-ethereum-provider"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = "0.4.10"
+log = "0.4.17"
+serde = "1.0.152"
+serde_json = "1.0.100"
+wasm-bindgen = { version = "0.2.84", features = ["serde-serialize"] }
+web3 = { git = "https://github.com/platonfloria/rust-web3.git", branch="feature/transport-either-to-support-wasm", version = "0.20.0", default-features = false, features = ["http-rustls-tls", "wasm", "eip-1193"] }
