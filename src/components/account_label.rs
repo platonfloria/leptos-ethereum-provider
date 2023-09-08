@@ -13,7 +13,7 @@ pub fn AccountLabel(cx: Scope) -> impl IntoView {
                     let ethereum = ethereum.clone();
                     if let Some(ethereum) = ethereum {
                         if ethereum.connected() {
-                            ethereum.display_address()
+                            ethereum.display_address().get()
                         } else {
                             "Disconnected".into()
                         }

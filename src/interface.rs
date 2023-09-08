@@ -130,36 +130,40 @@ impl EthereumInterface {
         connected.get()
     }
 
-    pub fn address(&self) -> Option<H160> {
+    pub fn address(&self) -> Signal<Option<H160>> {
         let (accounts, _) = self.accounts_slice();
-        accounts.get().as_ref().and_then(|a| a.first()).copied()
+        Signal::derive(self.cx, move || accounts.get().as_ref().and_then(|a| a.first()).copied())
     }
 
     /// returns the chain_id as a decimal. returns None on invalid chain values
-    pub fn chain_id(&self) -> Option<u64> {
+    pub fn chain_id(&self) -> Signal<Option<u64>> {
         let (chain, _) = self.chain_id_slice();
-        chain.get().as_ref().map(U256::as_u64)
+        Signal::derive(self.cx, move || chain.get().as_ref().map(U256::as_u64))
     }
 
-    pub fn chain_id_hex(&self) -> Option<String> {
+    pub fn chain_id_hex(&self) -> Signal<Option<String>> {
         let (chain, _) = self.chain_id_slice();
-        chain
+        Signal::derive(self.cx, move || chain
             .get()
             .as_ref()
-            .map(|chain_id| format!("0x{:X}", chain_id))
+            .map(|chain_id| format!("0x{:X}", chain_id)))
     }
 
-    pub fn display_short_address(&self) -> String {
-        self.address()
+    pub fn display_short_address(&self) -> Signal<String> {
+        let address = self.address().clone();
+        Signal::derive(self.cx, move || address
+            .get()
             .map(|address| address.to_string())
             // .map(|address| format!("0x{}", &address.split_at(2).1))
-            .unwrap_or_default()
+            .unwrap_or_default())
     }
 
-    pub fn display_address(&self) -> String {
-        self.address()
+    pub fn display_address(&self) -> Signal<String> {
+        let address = self.address().clone();
+        Signal::derive(self.cx, move || address
+            .get()
             .map(|add| format!("{:?}", add))
-            .unwrap_or(String::new())
+            .unwrap_or(String::new()))
     }
 
     pub async fn on_accounts_changed<F>(&self, callback: F)
