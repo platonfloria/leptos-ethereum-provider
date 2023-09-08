@@ -24,8 +24,6 @@ pub fn EthereumContextProvider(cx: Scope, children: Children) -> impl IntoView {
     provide_context(cx, interface);
 
     view! { cx,
-        <div>
-            {children(cx)}
-        </div>
+        {children(cx)}
     }
 }
