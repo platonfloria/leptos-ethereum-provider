@@ -6,7 +6,7 @@ use crate::EthereumInterface;
 #[component]
 pub fn ConnectButton(
     #[prop(optional)] children: Option<Children>,
-    #[prop(optional)] connected_html: Option<HtmlElement<html::Div>>,
+    #[prop(optional)] connected_html: Option<View>,
 ) -> impl IntoView {
     let ethereum = expect_context::<Option<EthereumInterface>>();
 
@@ -40,28 +40,31 @@ pub fn ConnectButton(
                         let disconnect = disconnect.clone();
                         if ethereum.connected() {
                             view! {
-                                <div on:click=disconnect>
+                                <div>
                                     {
-                                        move || view! {
-                                            <div>
-                                                {
-                                                    let connected_html = connected_html.clone();
-                                                    if let Some(connected_html) = connected_html {
-                                                        view! {
-                                                            <div>
-                                                                {connected_html}
-                                                            </div>
-                                                        }
-                                                    } else {
-                                                        view! {
-                                                            <div class="hover:shadow shadow btn connected">
-                                                                <img src="./images/providers/metamask.svg" height="24" width="24" alt="metamask" class="inline-flex mr-2" />
-                                                                {ethereum.display_short_address()}
-                                                            </div>
+                                        move || {
+                                            let disconnect = disconnect.clone();
+                                            view! {
+                                                <div>
+                                                    {
+                                                        let connected_html = connected_html.clone();
+                                                        if let Some(connected_html) = connected_html {
+                                                            view! {
+                                                                <div>
+                                                                    {connected_html}
+                                                                </div>
+                                                            }
+                                                        } else {
+                                                            view! {
+                                                                <div on:click=disconnect class="hover:shadow shadow btn connected">
+                                                                    <img src="./images/providers/metamask.svg" height="24" width="24" alt="metamask" class="inline-flex mr-2" />
+                                                                    {ethereum.display_short_address()}
+                                                                </div>
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            </div>
+                                                </div>
+                                            }
                                         }
                                     }
                                 </div>

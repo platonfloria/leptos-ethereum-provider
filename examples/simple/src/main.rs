@@ -4,17 +4,15 @@ use leptos_ethereum_provider::{
 };
 
 #[component]
-pub fn App(cx: Scope) -> impl IntoView {
-    view! { cx,
+pub fn App() -> impl IntoView {
+    view! {
         <div>
             <EthereumContextProvider>
-                <ConnectButton connected_html=view! { cx,
-                    <div>
-                        <button class="btn btn-primary connected">
-                            "Disconnect"
-                        </button>
-                    </div>
-                }>
+                <ConnectButton connected_html=view! {
+                    <button class="btn btn-primary connected">
+                        "Disconnect"
+                    </button>
+                }.into_view()>
                     <button class="btn btn-primary disconnected">
                         "Connect"
                     </button>
@@ -29,5 +27,5 @@ pub fn App(cx: Scope) -> impl IntoView {
 
 fn main() {
     console_log::init_with_level(log::Level::Info).expect("could not initialize logger");
-    mount_to_body(|cx| view! { cx, <App/> })
+    mount_to_body(|| view! { <App/> })
 }
