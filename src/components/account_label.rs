@@ -2,11 +2,12 @@ use leptos::*;
 
 use crate::EthereumInterface;
 
-#[component]
-pub fn AccountLabel(cx: Scope) -> impl IntoView {
-    let ethereum = expect_context::<Option<EthereumInterface>>(cx);
 
-    view! { cx,
+#[component]
+pub fn AccountLabel() -> impl IntoView {
+    let ethereum = expect_context::<Option<EthereumInterface>>();
+
+    view! {
         <div>
             {
                 move || {

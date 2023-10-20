@@ -10,6 +10,7 @@ use web3::{
 
 use crate::{Chain, ERC20Asset};
 
+
 #[derive(Debug)]
 pub struct EthereumState {
     pub connected: bool,
@@ -19,7 +20,6 @@ pub struct EthereumState {
 
 #[derive(Clone)]
 pub struct EthereumInterface {
-    pub(crate) cx: Scope,
     pub provider: Provider,
     pub state: RwSignal<EthereumState>,
 }
@@ -95,7 +95,6 @@ impl EthereumInterface {
 
     fn connected_slice(&self) -> (Signal<bool>, SignalSetter<bool>) {
         create_slice(
-            self.cx,
             self.state,
             |state| state.connected,
             |state, n| state.connected = n,
@@ -104,7 +103,6 @@ impl EthereumInterface {
 
     fn accounts_slice(&self) -> (Signal<Option<Vec<H160>>>, SignalSetter<Option<Vec<H160>>>) {
         create_slice(
-            self.cx,
             self.state,
             |state| state.accounts.clone(),
             |state, n| state.accounts = n,
@@ -113,7 +111,6 @@ impl EthereumInterface {
 
     fn chain_id_slice(&self) -> (Signal<Option<U256>>, SignalSetter<Option<U256>>) {
         create_slice(
-            self.cx,
             self.state,
             |state| state.chain_id,
             |state, n| state.chain_id = n,
@@ -132,18 +129,18 @@ impl EthereumInterface {
 
     pub fn address(&self) -> Signal<Option<H160>> {
         let (accounts, _) = self.accounts_slice();
-        Signal::derive(self.cx, move || accounts.get().as_ref().and_then(|a| a.first()).copied())
+        Signal::derive(move || accounts.get().as_ref().and_then(|a| a.first()).copied())
     }
 
     /// returns the chain_id as a decimal. returns None on invalid chain values
     pub fn chain_id(&self) -> Signal<Option<u64>> {
         let (chain, _) = self.chain_id_slice();
-        Signal::derive(self.cx, move || chain.get().as_ref().map(U256::as_u64))
+        Signal::derive(move || chain.get().as_ref().map(U256::as_u64))
     }
 
     pub fn chain_id_hex(&self) -> Signal<Option<String>> {
         let (chain, _) = self.chain_id_slice();
-        Signal::derive(self.cx, move || chain
+        Signal::derive(move || chain
             .get()
             .as_ref()
             .map(|chain_id| format!("0x{:X}", chain_id)))
@@ -151,7 +148,7 @@ impl EthereumInterface {
 
     pub fn display_short_address(&self) -> Signal<String> {
         let address = self.address().clone();
-        Signal::derive(self.cx, move || address
+        Signal::derive(move || address
             .get()
             .map(|address| address.to_string())
             // .map(|address| format!("0x{}", &address.split_at(2).1))
@@ -160,7 +157,7 @@ impl EthereumInterface {
 
     pub fn display_address(&self) -> Signal<String> {
         let address = self.address().clone();
-        Signal::derive(self.cx, move || address
+        Signal::derive(move || address
             .get()
             .map(|add| format!("{:?}", add))
             .unwrap_or(String::new()))

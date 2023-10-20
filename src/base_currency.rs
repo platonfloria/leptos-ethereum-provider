@@ -1,5 +1,6 @@
 use crate::BaseCurrency;
 
+
 pub fn eth() -> BaseCurrency {
     BaseCurrency {
         name: String::from("Ether"),

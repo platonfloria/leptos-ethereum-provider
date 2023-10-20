@@ -2,13 +2,13 @@ use leptos::*;
 
 use crate::EthereumInterface;
 
+
 #[component]
 pub fn ConnectButton(
-    cx: Scope,
     #[prop(optional)] children: Option<Children>,
     #[prop(optional)] connected_html: Option<HtmlElement<html::Div>>,
 ) -> impl IntoView {
-    let ethereum = expect_context::<Option<EthereumInterface>>(cx);
+    let ethereum = expect_context::<Option<EthereumInterface>>();
 
     if let Some(ethereum) = ethereum {
         let connect = {
@@ -27,9 +27,9 @@ pub fn ConnectButton(
         };
 
         // children.
-        let children = children.map(|f| f(cx));
+        let children = children.map(|f| f());
 
-        view! { cx,
+        view! {
             <div>
                 {
                     move || {
@@ -39,21 +39,21 @@ pub fn ConnectButton(
                         let connect = connect.clone();
                         let disconnect = disconnect.clone();
                         if ethereum.connected() {
-                            view! { cx,
+                            view! {
                                 <div on:click=disconnect>
                                     {
-                                        move || view! { cx,
+                                        move || view! {
                                             <div>
                                                 {
                                                     let connected_html = connected_html.clone();
                                                     if let Some(connected_html) = connected_html {
-                                                        view! { cx,
+                                                        view! {
                                                             <div>
                                                                 {connected_html}
                                                             </div>
                                                         }
                                                     } else {
-                                                        view! { cx,
+                                                        view! {
                                                             <div class="hover:shadow shadow btn connected">
                                                                 <img src="./images/providers/metamask.svg" height="24" width="24" alt="metamask" class="inline-flex mr-2" />
                                                                 {ethereum.display_short_address()}
@@ -67,17 +67,17 @@ pub fn ConnectButton(
                                 </div>
                             }
                         } else {
-                            view! { cx,
+                            view! {
                                 <div on:click=connect>
                                     {
                                         if let Some(children) = children {
-                                            view! { cx,
+                                            view! {
                                                 <div>
                                                     {children}
                                                 </div>
                                             }
                                         } else {
-                                            view! { cx,
+                                            view! {
                                                 <div class="btn btn-primary disconnected">
                                                     "Connect Wallet"
                                                 </div>
@@ -92,6 +92,6 @@ pub fn ConnectButton(
             </div>
         }
     } else {
-        view! { cx, <div/> }
+        view! { <div/> }
     }
 }

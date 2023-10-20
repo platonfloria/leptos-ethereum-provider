@@ -1,13 +1,13 @@
 use crate::{Chain, EthereumInterface};
 use leptos::*;
 
+
 #[component]
 pub fn SwitchNetworkButton(
-    cx: Scope,
     chain: Chain,
     #[prop(optional)] class: Option<String>,
 ) -> impl IntoView {
-    let ethereum = expect_context::<Option<EthereumInterface>>(cx);
+    let ethereum = expect_context::<Option<EthereumInterface>>();
 
     if let Some(ethereum) = ethereum {
         let chain = chain.clone();
@@ -23,7 +23,7 @@ pub fn SwitchNetworkButton(
             }
         };
 
-        view! { cx,
+        view! {
             <div>
                 <button on:click=on_click class=class>
                     "Switch to "{&chain.chain_name}
@@ -31,6 +31,6 @@ pub fn SwitchNetworkButton(
             </div>
         }
     } else {
-        view! { cx, <div/> }
+        view! { <div/> }
     }
 }

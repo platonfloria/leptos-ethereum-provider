@@ -3,14 +3,13 @@ use web3::transports::eip_1193::Provider;
 
 use crate::{EthereumInterface, EthereumState};
 
+
 #[component]
-pub fn EthereumContextProvider(cx: Scope, children: Children) -> impl IntoView {
+pub fn EthereumContextProvider(children: Children) -> impl IntoView {
     let interface = if let Ok(Some(provider)) = Provider::default() {
         Some(EthereumInterface {
-            cx: cx.clone(),
             provider,
             state: create_rw_signal(
-                cx,
                 EthereumState {
                     connected: false,
                     accounts: None,
@@ -21,9 +20,7 @@ pub fn EthereumContextProvider(cx: Scope, children: Children) -> impl IntoView {
     } else {
         None
     };
-    provide_context(cx, interface);
+    provide_context(interface);
 
-    view! { cx,
-        {children(cx)}
-    }
+    children()
 }
