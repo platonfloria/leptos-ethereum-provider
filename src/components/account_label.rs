@@ -1,7 +1,6 @@
-use leptos::*;
+use leptos::prelude::*;
 
 use crate::EthereumInterface;
-
 
 #[component]
 pub fn AccountLabel() -> impl IntoView {

@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-leptos = "0.6.12"
-log = "0.4.21"
-serde = "1.0.203"
-serde_json = "1.0.117"
-wasm-bindgen = { version = "0.2.92" }
+leptos = "0.7.8"
+log = "0.4.27"
+serde = "1.0.219"
+serde_json = "1.0.140"
+wasm-bindgen = { version = "0.2.100" }
 web3 = { git = "https://github.com/platonfloria/rust-web3.git", branch="feature/transport-either-to-support-wasm", version = "0.20.0", default-features = false, features = ["http-rustls-tls", "wasm", "eip-1193"] }

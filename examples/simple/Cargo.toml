@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-leptos = { version = "0.6.12", features = ["csr"] }
-log = "0.4.21"
+leptos = { version = "0.7.8", features = ["csr"] }
+log = "0.4.27"
 leptos-ethereum-provider = { path = "../.." }
 console_log = "1.0.0"

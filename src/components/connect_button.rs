@@ -1,16 +1,15 @@
-use leptos::*;
+use leptos::{prelude::*, task::spawn_local};
 
 use crate::EthereumInterface;
 
-
 #[component]
 pub fn ConnectButton(
-    #[prop(optional)] children: Option<Children>,
-    #[prop(optional)] connected_html: Option<View>,
+    #[prop(optional)] children: Option<ChildrenFn>,
+    #[prop(optional)] connected_html: Option<impl IntoView + Clone + 'static>,
 ) -> impl IntoView {
     let ethereum = expect_context::<Option<EthereumInterface>>();
 
-    if let Some(ethereum) = ethereum {
+    ethereum.map(|ethereum| {
         let connect = {
             let ethereum = ethereum.clone();
             move |_| {
@@ -26,8 +25,7 @@ pub fn ConnectButton(
             move |_| ethereum.disconnect()
         };
 
-        // children.
-        let children = children.map(|f| f());
+        let children = || children.map(|f| f());
 
         view! {
             <div>
@@ -53,14 +51,14 @@ pub fn ConnectButton(
                                                                 <div>
                                                                     {connected_html}
                                                                 </div>
-                                                            }
+                                                            }.into_any()
                                                         } else {
                                                             view! {
                                                                 <div on:click=disconnect class="hover:shadow shadow btn connected">
                                                                     <img src="./images/providers/metamask.svg" height="24" width="24" alt="metamask" class="inline-flex mr-2" />
                                                                     {ethereum.display_short_address()}
                                                                 </div>
-                                                            }
+                                                            }.into_any()
                                                         }
                                                     }
                                                 </div>
@@ -68,33 +66,31 @@ pub fn ConnectButton(
                                         }
                                     }
                                 </div>
-                            }
+                            }.into_any()
                         } else {
                             view! {
                                 <div on:click=connect>
                                     {
-                                        if let Some(children) = children {
+                                        if let Some(children) = children() {
                                             view! {
                                                 <div>
                                                     {children}
                                                 </div>
-                                            }
+                                            }.into_any()
                                         } else {
                                             view! {
                                                 <div class="btn btn-primary disconnected">
                                                     "Connect Wallet"
                                                 </div>
-                                            }
+                                            }.into_any()
                                         }
                                     }
                                 </div>
-                            }
+                            }.into_any()
                         }
                     }
                 }
             </div>
         }
-    } else {
-        view! { <div/> }
-    }
+    })
 }

@@ -1,15 +1,11 @@
 use crate::{Chain, EthereumInterface};
-use leptos::*;
-
+use leptos::{prelude::*, task::spawn_local};
 
 #[component]
-pub fn SwitchNetworkButton(
-    chain: Chain,
-    #[prop(optional)] class: Option<String>,
-) -> impl IntoView {
+pub fn SwitchNetworkButton(chain: Chain, #[prop(optional)] class: Option<String>) -> impl IntoView {
     let ethereum = expect_context::<Option<EthereumInterface>>();
 
-    if let Some(ethereum) = ethereum {
+    ethereum.map(|ethereum| {
         let chain = chain.clone();
 
         let on_click = {
@@ -26,11 +22,9 @@ pub fn SwitchNetworkButton(
         view! {
             <div>
                 <button on:click=on_click class=class>
-                    "Switch to "{&chain.chain_name}
+                    "Switch to "{chain.chain_name}
                 </button>
             </div>
         }
-    } else {
-        view! { <div/> }
-    }
+    })
 }

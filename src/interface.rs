@@ -1,4 +1,4 @@
-use leptos::*;
+use leptos::{prelude::*, reactive::wrappers::write::SignalSetter, task::spawn_local};
 use serde_json::json;
 use wasm_bindgen::JsValue;
 use web3::{
@@ -9,7 +9,6 @@ use web3::{
 };
 
 use crate::{Chain, ERC20Asset};
-
 
 #[derive(Debug)]
 pub struct EthereumState {
@@ -23,6 +22,9 @@ pub struct EthereumInterface {
     pub provider: Provider,
     pub state: RwSignal<EthereumState>,
 }
+
+unsafe impl Send for EthereumInterface {}
+unsafe impl Sync for EthereumInterface {}
 
 impl EthereumInterface {
     pub async fn connect(&self) -> Result<(), String> {
@@ -140,27 +142,33 @@ impl EthereumInterface {
 
     pub fn chain_id_hex(&self) -> Signal<Option<String>> {
         let (chain, _) = self.chain_id_slice();
-        Signal::derive(move || chain
-            .get()
-            .as_ref()
-            .map(|chain_id| format!("0x{:X}", chain_id)))
+        Signal::derive(move || {
+            chain
+                .get()
+                .as_ref()
+                .map(|chain_id| format!("0x{:X}", chain_id))
+        })
     }
 
     pub fn display_short_address(&self) -> Signal<String> {
         let address = self.address().clone();
-        Signal::derive(move || address
-            .get()
-            .map(|address| address.to_string())
-            // .map(|address| format!("0x{}", &address.split_at(2).1))
-            .unwrap_or_default())
+        Signal::derive(move || {
+            address
+                .get()
+                .map(|address| address.to_string())
+                // .map(|address| format!("0x{}", &address.split_at(2).1))
+                .unwrap_or_default()
+        })
     }
 
     pub fn display_address(&self) -> Signal<String> {
         let address = self.address().clone();
-        Signal::derive(move || address
-            .get()
-            .map(|add| format!("{:?}", add))
-            .unwrap_or(String::new()))
+        Signal::derive(move || {
+            address
+                .get()
+                .map(|add| format!("{:?}", add))
+                .unwrap_or(String::new())
+        })
     }
 
     pub async fn on_accounts_changed<F>(&self, callback: F)
