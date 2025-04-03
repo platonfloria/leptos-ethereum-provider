@@ -15,10 +15,13 @@ pub fn Contents() -> impl IntoView {
         };
 
         view! {
-            <ConnectButton connected_html=view! {
-                <button on:click=disconnect class="btn btn-primary connected">
-                    "Disconnect"
-                </button>
+            <ConnectButton connected_html=move || {
+                let disconnect = disconnect.clone();
+                view! {
+                    <button on:click=disconnect class="btn btn-primary connected">
+                        "Disconnect"
+                    </button>
+                }
             }>
                 <button class="btn btn-primary disconnected">
                     "Connect"
