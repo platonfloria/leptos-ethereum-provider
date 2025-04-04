@@ -1,4 +1,5 @@
 use leptos::{prelude::*, reactive::wrappers::write::SignalSetter, task::spawn_local};
+use send_wrapper::SendWrapper;
 use serde_json::json;
 use wasm_bindgen::JsValue;
 use web3::{
@@ -10,6 +11,8 @@ use web3::{
 
 use crate::{Chain, ERC20Asset};
 
+pub type EthereumInterface = SendWrapper<EthereumInner>;
+
 #[derive(Debug)]
 pub struct EthereumState {
     pub connected: bool,
@@ -18,15 +21,12 @@ pub struct EthereumState {
 }
 
 #[derive(Clone)]
-pub struct EthereumInterface {
+pub struct EthereumInner {
     pub provider: Provider,
     pub state: RwSignal<EthereumState>,
 }
 
-unsafe impl Send for EthereumInterface {}
-unsafe impl Sync for EthereumInterface {}
-
-impl EthereumInterface {
+impl EthereumInner {
     pub async fn connect(&self) -> Result<(), String> {
         let web3 = web3::Web3::new(Eip1193::new(self.provider.clone()));
 

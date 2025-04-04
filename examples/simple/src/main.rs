@@ -1,7 +1,6 @@
 use leptos::prelude::*;
 use leptos_ethereum_provider::{
-    chain, AccountLabel, ConnectButton, EthereumContextProvider, EthereumInterface,
-    SwitchNetworkButton,
+    chain, AccountLabel, ConnectButton, EthereumContextProvider, EthereumInterface, SwitchNetworkButton
 };
 
 #[component]
