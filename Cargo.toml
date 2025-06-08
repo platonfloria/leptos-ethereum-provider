@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-leptos = "0.7.8"
+leptos = "0.8.2"
 log = "0.4.27"
 send_wrapper = "0.6.0"
 serde = "1.0.219"
